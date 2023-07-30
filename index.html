@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h1>
+						Regular expressions
+					</h1>
+				</section>
+				<section>
+					<section>The syntax</section>
+					<section>The “long” syntax:
+						<pre><code data-trim data-noescape>
+							const regexp = new RegExp("pattern", "flags");
+						</code></pre>
+						<p>*use when we know the regular expression at the code writing time</p>
+					</section>
+					<section>The “short” syntax:
+						<pre><code data-trim data-noescape>
+							regexp = /pattern/; // no flags
+							regexp = /pattern/gmi; // with flags g,m and i
+						</code></pre>
+						<p>*use when we need to create a regexp “on the fly” from a dynamically generated string</p>
+					</section>
+				</section>
+				<section>
+					<section>Flags</section>
+					<section>
+						<ul>
+							<li> <strong>i</strong> - the search is case-insensitive: no difference between A and a</li>
+							<li> <strong>g</strong> - the search looks for all matches</li>
+							<li> <strong>m</strong> - multiline mode</li>
+							<li> <strong>s</strong> - enables “dotall” mode, that allows a dot . to match newline character \n</li>
+							<li> <strong>u</strong> - enables full Unicode support</li>
+							<li> <strong>y</strong> - “Sticky” mode: searching at the exact position in the text</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<section>Types of methods used regular expression</section>
+					<section>
+						<h3>1. Test method</h3>
+						<pre><code data-trim data-noescape>
+							const regex = /^\d{4}$/g;
+							regex.test('4567'); // output is true
+						</code></pre>
+					</section>
+					<section>
+						<h3>2. match method</h3>
+						<pre><code data-trim data-noescape>
+							const s = 'Hello everyone, how are you?';
+							const regex = /how/;
+							s.match(regex);// output "how"
+						</code></pre>
+					</section>
+					<section>
+						<h3>3. exec method</h3>
+						<pre><code data-trim data-noescape>
+							const s = '234-453-7825';
+							const regex = /^(\d{3})[-.](\d{3})[.-](\d{4})$/;
+							regex.exec(s);
+					 		//output ["234-453-7825", "234", "453", "7825"]
+						</code></pre>
+					</section>
+					<section>
+						<h3>4. replace method</h3>
+						<pre><code data-trim data-noescape>
+							// no flag g
+							alert( "We will, we will".replace(/we/i, "I") ); // I will, we will
+
+							// with flag g
+							alert( "We will, we will".replace(/we/ig, "I") ); // I will, I will
+						</code></pre>
+					</section>
+					<section>
+						<h3>5. split method</h3>
+						<pre><code data-trim data-noescape>
+							const s = 'Regex is very useful, especially when verifying card 
+							numbers, forms and phone numbers';
+							const regex = /,\s+/;
+							regex.split(s);
+						 // output ["Regex is very useful", "especially when verifying card numbers", "forms and phone numbers"]
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>Anchors: string start ^ and end $</section>
+					<section>
+						<p>To match strings that start with "hey", use the ^ operator:</p>
+						<pre><code data-trim data-noescape>
+							/^hey/.test('hey') // true
+							/^hey/.test('bla hey') // false
+						</code></pre>
+					</section>
+					<section>
+						<p>To match strings that end with "hey", use the $ operator:</p>
+						<pre><code data-trim data-noescape>
+							/^hey/.test('hey') // true
+							/^hey/.test('bla hey') // true
+							/hey$/.test('hey you') // false
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>Sets and ranges [...]</section>
+					<section>
+						<h3>Sets</h3>
+						<p>[eao] means any of the 3 characters: 'a', 'e', or 'o'</p>
+						<pre><code data-trim data-noescape>
+							// find [t or m], and then "op"
+							alert( "Mop top".match(/[tm]op/gi) ); // "Mop", "top"
+						</code></pre>
+					</section>
+					<section>
+						<h3>Ranges</h3>
+						<pre><code data-trim data-noescape>
+							/[a-z]/ // a, b, c, ... , x, y, z
+							/[A-Z]/ // A, B, C, ... , X, Y, Z
+							/[a-c]/ // a, b, c
+							/[0-9]/ // 0, 1, 2, 3, ... , 8, 9
+						</code></pre>
+						<p>Exampls:</p>
+						<pre><code data-trim data-noescape>
+							/[a-z]/.test('a') // true
+							/[a-z]/.test('1') // false
+							/[^A-Za-z0-9]/.test('a') // false
+							/[^A-Za-z0-9]/.test('1') // false
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>Character classes</section>
+					<section>
+						<ul>
+							<li> <strong>\d</strong> matches any digit, equivalent to [0-9]</li>
+							<li> <strong>\D</strong> matches any character that’s not a digit, equivalent to [^0-9]</li>
+							<li> <strong>\w</strong> matches any alphanumeric character, equivalent to [A-Za-z0-9]</li>
+							<li> <strong>\W</strong> - matches any non-alphanumeric character, equivalent to [^A-Za-z0-9]</li>
+							<li> <strong>\s</strong> - matches any whitespace character: spaces, tabs, newlines and Unicode spacest</li>
+							<li> <strong>\S</strong> - matches any character that’s not a whitespace</li>
+							<li> <strong>\n</strong> - matches a newline character</li>
+							<li> <strong>.</strong> - matches any character that is not a newline char</li>
+						</ul>
+					</section>
+					<section>
+						<h3>Examplels:</h3>
+						<p>Let’s find the first digit in the phone number:</p>
+						<pre><code data-trim data-noescape>
+							let str = "+7(903)-123-45-67";
+							alert( str.match(/\d/) ); // 7
+						</code></pre>
+						<p>Let’s find non-digits \D and remove them from the string:</p>
+						<pre><code data-trim data-noescape>
+							let str = "+7(903)-123-45-67";
+							alert( str.replace(/\D/g, "") ); // 79031234567
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>Quantifiers</section>
+					<section>
+						<h3>+</h3>
+						<p>Match one or more (>=1) items:</p>
+						<pre><code data-trim data-noescape>
+							/^\d+$/.test('12') // true
+							/^\d+$/.test('14') // true
+							/^\d+$/.test('144343') // true
+							/^\d+$/.test('') // false
+							/^\d+$/.test('1a') // false
+						</code></pre>
+					</section>
+					<section>
+						<h3>*</h3>
+						<p>Match 0 or more (>= 0) items:</p>
+						<pre><code data-trim data-noescape>
+							/^\d*$/.test('12') // true
+							/^\d*$/.test('14') // true
+							/^\d*$/.test('144343') // true
+							/^\d*$/.test('') // true
+							/^\d*$/.test('1a') // false
+						</code></pre>
+					</section>
+					<section>
+						<h3>{n}</h3>
+						<p>Match exactly n items:</p>
+						<pre><code data-trim data-noescape>
+							/^\d{3}$/.test('123') // true
+							/^\d{3}$/.test('12') // false
+							/^\d{3}$/.test('1234') // false
+							/^[A-Za-z0-9]{3}$/.test('Abc') // true
+						</code></pre>
+					</section>
+					<section>
+						<h3>{n,m}</h3>
+						<p>Match between n and m times:</p>
+						<pre><code data-trim data-noescape>
+							/^\d{3,5}$/.test('123') // true
+							/^\d{3,5}$/.test('1234') // true
+							/^\d{3,5}$/.test('12345') // true
+							/^\d{3,5}$/.test('123456') // false
+						</code></pre>
+					</section>
+					<section>
+						<h3>?</h3>
+						<p>Means “zero or one”, the same as {0,1}. In other words, it makes the symbol optional.</p>
+						<pre><code data-trim data-noescape>
+							let str = "Should I write color or colour?";
+							alert( str.match(/colou?r/g) ); // color, colour
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>Regular expression choices</section>
+					<section>
+						<p>If you want to search one string or another, use the | operator:</p>
+						<pre><code data-trim data-noescape>
+							/hey|ho/.test('hey') // true
+							/hey|ho/.test('ho') // true
+						</code></pre>
+					</section>
+				</section>
+				<section>
+					<section>Groups (...)</section>
+					<section>
+						<p>This example matches exactly 3 digits followed by one or more alphanumeric characters:</p>
+						<pre><code data-trim data-noescape>
+							/^(\d{3})(\w+)$/.test('123') // false
+							/^(\d{3})(\w+)$/.test('123s') // true
+							/^(\d{3})(\w+)$/.test('123something') // true
+							/^(\d{3})(\w+)$/.test('1234') // true
+						</code></pre>
+					</section>
+				</section>
+				<section>THANKS FOR ATTENTION!</section>
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
