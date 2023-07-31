@@ -190,6 +190,13 @@ gulp.task('css-core', () => gulp.src(['css/reveal.scss'])
     .pipe(header(banner))
     .pipe(gulp.dest('./dist')))
 
+gulp.task('css-core', () => gulp.src(['css/custom.scss'])
+    .pipe(compileSass())
+    .pipe(autoprefixer())
+    .pipe(minify({compatibility: 'ie9'}))
+    .pipe(header(banner))
+    .pipe(gulp.dest('./dist')))
+
 gulp.task('css', gulp.parallel('css-themes', 'css-core'))
 
 gulp.task('qunit', () => {
